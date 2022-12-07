@@ -23,10 +23,10 @@ export async function fetchCategoryJoke(category: string) {
   return categoryJoke;
 }
 
-export async function fetchCurrentWord(currentUserSearch : string){
+export async function fetchCurrentWord(wordFromInputField : string){
   // Call the API and fetch data
   const baseUrl = "https://api.chucknorris.io/jokes/search?query=";
-  const currentWord = await fetch(`${baseUrl}${currentUserSearch}`);
+  const currentWord = await fetch(`${baseUrl}${wordFromInputField}`);
   // Convert to JSON
   const modifiedCurrentWord = await currentWord.json();
   // return the object

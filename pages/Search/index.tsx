@@ -12,61 +12,52 @@ export default function SearchPage(props: any) {
   const [clicked, setClicked] = useState<boolean>(false);
   const [resultsObject, setResultsObject] = useState<any>(null);
 
-  useEffect(() => {
-    // Do not proceed if clicked is not true
-    if (clicked === false) return;
-
-    // Do not proceed if user hasn't given a keyword
-    if (currentUserSearch === "") return;
-
-    // Fetching data via the API
-    const fetchUserSearch = async () => {
-      const userSearch = await fetchCurrentWord(currentUserSearch);
-      // Update State
+  const fetchUserSearch = async () => {
+    setClicked(true)
+    let userSearch = await fetchCurrentWord(currentUserSearch);
+    // Update State
+    if (userSearch.result){
       setResultsObject(userSearch);
-
-      // Reverting set clicked state
-     
-    };
-
-    // Invoke the async fetch data function
-   
-    fetchUserSearch();
-    setClicked(false);
-  }, [clicked]);
+    }else{
+      setResultsObject(null)
+    }
+    // Reverting set clicked state
+  };
 
   const ResultsObjects = () => {
-    if (
-      clicked === true &&
-      resultsObject !== null &&
-      currentUserSearch.length > 0
-    ) {
-      return (
-        <div className={styles.jokediv}>
-          <ul>
-            {resultsObject?.result?.map((joke: any, index: number) => {
-              return <li key={index}>{joke?.value}</li>;
-            })}
-          </ul>
-        </div>
-      );
-    } else if (
-      clicked === true &&
-      currentUserSearch.length > 0 &&
-      resultsObject === null
-    ) {
-      console.log("no such keyword");
-      return (
-        <div className={styles.nojoke}>
-          "There is no joke with this keyword!"
-        </div>
-      );
-    } else if (clicked === true  && currentUserSearch.length === 0 &&
-      resultsObject === null ) {
-      console.log("no word entry from user");
-      return <div className={styles.noWordGiven}>Please type a keyword!</div>;
+    if (clicked){
+      if (
+        currentUserSearch !== "" &&
+        resultsObject === null
+      ) {
+        console.log("no such keyword");
+        // setClicked(false);
+        return (
+          <div className={styles.nojoke}>There is no joke with this keyword!</div>
+        );
+      } else if (
+        currentUserSearch.length === 0 &&
+        resultsObject === null
+      ) {
+        console.log("no word entry from user");
+        return <div className={styles.noWordGiven}>Please type a keyword!</div>;
+      } else if (
+        resultsObject !== null &&
+        currentUserSearch.length > 0
+      ) {
+        console.log(resultsObject);
+        return (
+          <div className={styles.jokediv}>
+            <ul>
+              {resultsObject?.result?.map((joke: any, index: number) => {
+                return <li key={index}>{joke?.value}</li>;
+              })}
+            </ul>
+          </div>
+        );
+      }
     }
-    else { return;}
+    return null;
   };
 
   return (
@@ -78,7 +69,6 @@ export default function SearchPage(props: any) {
       </Head>
       <main className={styles.searchpage}>
         <header className={styles.header}>
-          {" "}
           <Image className={styles.logo} alt="logo" src={download}></Image>
           <div>
             <Link href="/">
@@ -103,20 +93,17 @@ export default function SearchPage(props: any) {
               <input
                 type="text"
                 className={styles.searchforminput}
-                onChange={(event) => setCurrentUserSearch(event.target.value)}
+                onChange={(event) => {setClicked(false); setCurrentUserSearch(event.target.value)}}
               />
               <button
                 className={styles.searchformbutton}
-                onClick={() => setClicked(true)}
+                onClick={() => fetchUserSearch()}
               >
                 <i className="fa fa-search"></i>Search Joke
               </button>
             </div>
-            {/* {clicked === true && currentUserSearch !== "" ? (
-              <div className={styles.secondDiv}> */}
-                <ResultsObjects />
-              {/* </div>
-            ) : null} */}
+
+            <ResultsObjects />
           </div>
         </div>
       </main>

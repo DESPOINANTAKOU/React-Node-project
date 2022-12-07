@@ -229,7 +229,6 @@
 .formdiv{
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 7rem;
   margin-top: 4rem;
@@ -281,4 +280,10 @@
  margin-top: 2rem;
  padding-left: 1rem;
  padding-right: 1rem;
+}
+
+.nojoke{
+  margin: 3rem;
+  background-color: #dadce0;
+  padding : 1.5rem;
 }
